@@ -13,7 +13,6 @@ import mate.academy.security.AuthenticationService;
 import mate.academy.service.CinemaHallService;
 import mate.academy.service.MovieService;
 import mate.academy.service.MovieSessionService;
-import mate.academy.service.UserService;
 
 public class Main {
     public static void main(String[] args) {
@@ -59,17 +58,18 @@ public class Main {
                         fastAndFurious.getId(), LocalDate.now()));
 
         Injector injector = Injector.getInstance("mate.academy");
-        UserService userService = (UserService) injector.getInstance(UserService.class);
         User user = new User();
         user.setEmail("user_email");
         user.setPassword("password");
-        userService.add(user);
 
         AuthenticationService authenticationService
                 = (AuthenticationService) injector.getInstance(AuthenticationService.class);
         try {
-            authenticationService.register(user.getEmail(), user.getPassword());
-            authenticationService.login(user.getEmail(), user.getPassword());
+            User register = authenticationService.register(user.getEmail(), user.getPassword());
+            System.out.println("Registered user: " + register);
+
+            User login = authenticationService.login(user.getEmail(), user.getPassword());
+            System.out.println("Logged in successfully: " + login);
         } catch (RegistrationException e) {
             System.out.println("Registration failed");
         } catch (AuthenticationException e) {
